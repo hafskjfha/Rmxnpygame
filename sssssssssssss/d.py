@@ -1,16 +1,19 @@
-from ha_sy import join_jamos, split_syllables
+from hangul_system import join_jamos, split_syllables
 import pandas as pd
 from openpyxl import Workbook
 import random
-import re
+import re,sys
 
 print('starting...')
 print('reading DB....')
-df = pd.read_excel('C:/Users/win/Downloads/sssssssssssss/Ndb.xlsx') #db엑셀 읽기
+#df = pd.read_excel('C:/Users/win/Downloads/sssssssssssss/Ndb.xlsx') #db엑셀 읽기
+with open('id_list (1).txt','r',encoding='utf-8') as f:
+  db_word=f.read().split()
+db_word=set(db_word)
 chin = 0
 po = 0
-file_path = 'C:/Users/win/Downloads/sssssssssssss/result_words3.txt'
-file_path2 = 'C:/Users/win/Downloads/sssssssssssss/sdasd.txt'
+file_path = '/content/result_words3.txt'
+file_path2 = '/content/sdasd.txt'
 ch_list1 = ['ㅏ','ㅐ','ㅗ','ㅚ','ㅜ','ㅡ'] #두음 1
 ch_list2 = ['ㅑ','ㅕ','ㅖ','ㅛ','ㅠ','ㅣ'] #두음 2
 ch_list3 = ['ㅕ','ㅛ','ㅠ','ㅣ'] #두음 3
@@ -49,7 +52,7 @@ def extract_last_character(text):
 
 def check_word_in_DB(word):
     try:
-        if word in df['id'].values:    # 'id' 컬럼에 단어가 있는지 확인
+        if word in db_word:    # 'id' 컬럼에 단어가 있는지 확인
             return True
         else:
             #print('사전에 없는 단어 입니다.')
@@ -195,7 +198,8 @@ def print_last_sub(last_character,sub_last_character):
 def extract_words_starting_with(letter):
     try:
         #df = pd.read_excel('Ndb.xlsx')  # 엑셀 파일 불러오기
-        words = df[df['id'].str.startswith(letter)]['id'].tolist()
+        words=[word for word in db_word if word[0]==letter]
+        #words = df[df['id'].str.startswith(letter)]['id'].tolist()
 
         return words  # 시작하는 단어들을 담은 리스트 반환
 
@@ -292,6 +296,7 @@ while True :
             compter_win += 1
             break
         elif input_word == 'off' :
+            sys.exit()
             break
         else :
             pass
