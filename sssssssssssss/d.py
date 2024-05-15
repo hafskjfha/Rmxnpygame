@@ -2,18 +2,21 @@ from hangul_system import join_jamos, split_syllables
 import pandas as pd
 from openpyxl import Workbook
 import random
-import re,sys
+import re,sys,os
 
+
+current_dir = os.path.dirname(__file__)
+id_fi=os.path.join(current_dir, '.\\id_list (1).txt')
 print('starting...')
 print('reading DB....')
 #df = pd.read_excel('C:/Users/win/Downloads/sssssssssssss/Ndb.xlsx') #db엑셀 읽기
-with open('id_list (1).txt','r',encoding='utf-8') as f:
+with open(id_fi,'r',encoding='utf-8') as f:
   db_word=f.read().split()
 db_word=set(db_word)
 chin = 0
 po = 0
-file_path = '/content/result_words3.txt'
-file_path2 = '/content/sdasd.txt'
+file_path = os.path.join(current_dir, '.\\result_words3.txt')#'/content/result_words3.txt'
+file_path2 =os.path.join(current_dir, '.\\sdasd.txt') #'/content/sdasd.txt'
 ch_list1 = ['ㅏ','ㅐ','ㅗ','ㅚ','ㅜ','ㅡ'] #두음 1
 ch_list2 = ['ㅑ','ㅕ','ㅖ','ㅛ','ㅠ','ㅣ'] #두음 2
 ch_list3 = ['ㅕ','ㅛ','ㅠ','ㅣ'] #두음 3
