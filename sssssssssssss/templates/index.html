@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stack Visualization</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Stack Visualization</h1>
+    <form id="inputForm">
+        <label for="inputBox">Enter something:</label>
+        <input type="text" id="inputBox" name="inputBox">
+        <input type="submit" value="Submit">
+    </form>
+    <div id="stackContainer" class="stack-container"></div>
+
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+.stack-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+    margin-top: 60px; /* 컨테이너 위쪽에 여백 추가 */
+}
+
+.box {
+    width: 200px; /* 박스 너비 */
+    height: 60px; /* 박스 높이 */
+    border: 2px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    margin-top: 20px; /* 박스 위쪽에 여백 추가 */
+    box-sizing: border-box;
+    overflow: hidden; /* 내용이 넘치면 숨김 */
+    text-overflow: ellipsis; /* 넘치는 내용에 ... 추가 */
+    white-space: nowrap; /* 줄바꿈 방지 */
+}
+
+
+.empty-box {
+    display: none;
+}
