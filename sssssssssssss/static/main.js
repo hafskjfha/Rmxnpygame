@@ -38,15 +38,14 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
+                displayArea.style.display = 'block'; // 글자 표시 박스를 보이도록 설정
+
                 if (data.success) {
-                    // 성공 시 글자를 1초 동안 보여준 후 스택에 업데이트
-                    const resultElement = document.createElement('div');
-                    resultElement.textContent = input_value;
-                    resultElement.className = 'success';
-                    displayArea.appendChild(resultElement);
+                    displayArea.textContent = input_value;
+                    displayArea.className = 'displayArea success'; // 성공 스타일 적용
 
                     setTimeout(() => {
-                        displayArea.removeChild(resultElement);
+                        displayArea.textContent = ''; // 글자 사라지게 설정
                         // 스택 업데이트 요청
                         fetch('/submit', {
                             method: 'POST',
@@ -66,16 +65,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         .catch(error => console.error('Error:', error));
                     }, 1000);
                 } else {
-                    // 실패 시 글자에 취소선 추가 후 1초 동안 보여줌
-                    const resultElement = document.createElement('div');
-                    resultElement.textContent = input_value;
-                    resultElement.className = 'failure';
-                    resultElement.style.textDecoration = 'line-through';
-                    displayArea.appendChild(resultElement);
+                    displayArea.textContent = input_value;
+                    displayArea.className = 'displayArea failure'; // 실패 스타일 적용
 
                     setTimeout(() => {
-                        displayArea.removeChild(resultElement);
-                        inputBox.value = ''; // 입력값 지우기
+                        displayArea.textContent = ''; // 글자 사라지게 설정
                     }, 1000);
                 }
 
