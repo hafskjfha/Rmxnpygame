@@ -8,11 +8,16 @@
 </head>
 <body>
     <h1>Stack Visualization</h1>
-    <form id="inputForm">
-        <label for="inputBox">Enter something:</label>
-        <input type="text" id="inputBox" name="inputBox">
-        <input type="submit" value="Submit">
-    </form>
+    <div id="input-box">
+        <form id="inputForm">
+            <input type="text" id="userInput" placeholder="글자를 입력하세요">
+            <button id="submitButton" type="button">완료</button>
+        </form>
+    </div>
+
+    <!-- This is a one-line comment -->
+    <div id="displayArea"></div>
+
     <div id="stackContainer" class="stack-container"></div>
 
     <script src="{{ url_for('static', filename='main.js') }}"></script>

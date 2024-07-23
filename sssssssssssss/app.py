@@ -29,5 +29,16 @@ def submit():
     else:
         return jsonify({'error': 'Request must be JSON'}), 400
 
+
+@app.route('/api/su',methods=['POST','GET'])
+def check():
+    if request.is_json:
+        data = request.get_json()
+        valu = data.get('inputBox')
+        if valu=='하이':
+            return jsonify({"success": True})
+        else:
+            return jsonify({"success": False})
+
 if __name__ == '__main__':
     app.run(debug=True)

@@ -25,3 +25,12 @@
 .empty-box {
     display: none;
 }
+
+.success {
+    color: green;
+}
+
+.failure {
+    color: red;
+}
+
