@@ -7,6 +7,8 @@ stack = []
 
 @app.route('/', methods=['GET','POST'])
 def home():
+    global stack
+    stack = []
     return render_template('index.html')
 
 @app.route('/stack', methods=['GET'])
