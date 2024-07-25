@@ -25,7 +25,7 @@ def submit():
             if len(stack) >= 5:
                 stack.pop(0)
             stack.append(new_element)
-            return jsonify({'success': True, 'stack': stack})
+            return jsonify({'success': True, 'stack': stack,"letter":f"{new_element[-1]}"})
         else:
             return jsonify({'error': 'No input provided'}), 400
     else:

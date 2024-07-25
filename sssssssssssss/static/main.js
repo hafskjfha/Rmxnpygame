@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const stackContainer = document.getElementById('stackContainer');
     const displayArea = document.getElementById('displayArea');
+    let lastLetter = '';  // 마지막으로 표시된 letter를 저장하는 변수
 
     function updateStack() {
         fetch('/stack')
@@ -38,9 +39,9 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => response.json())
             .then(data => {
-                displayArea.style.display = 'block'; // 글자 표시 박스를 보이도록 설정
-
                 if (data.success) {
+                    // 성공적인 요청 처리
+                    displayArea.style.display = 'block'; // 글자 표시 박스를 보이도록 설정
                     displayArea.textContent = input_value;
                     displayArea.className = 'displayArea success'; // 성공 스타일 적용
 
@@ -57,19 +58,29 @@ document.addEventListener('DOMContentLoaded', function() {
                         .then(response => response.json())
                         .then(submitData => {
                             if (submitData.success) {
+                                // 응답에서 letter를 추출하여 표시
+                                lastLetter = submitData.letter; // 마지막으로 표시된 letter 저장
                                 updateStack(); // 스택 업데이트
+
+                                // displayArea에 letter 표시 (계속 유지)
+                                displayArea.textContent = lastLetter;
+                                displayArea.className = 'displayArea success'; // 성공 스타일 적용
                             } else {
                                 console.error('Error:', submitData.error);
                             }
                         })
                         .catch(error => console.error('Error:', error));
-                    }, 1000);
+                    }, 2000);
                 } else {
+                    // 실패한 요청 처리
                     displayArea.textContent = input_value;
                     displayArea.className = 'displayArea failure'; // 실패 스타일 적용
 
                     setTimeout(() => {
                         displayArea.textContent = ''; // 글자 사라지게 설정
+                        // 실패한 경우, 마지막 letter 다시 표시
+                        displayArea.textContent = lastLetter;
+                        displayArea.className = 'displayArea success'; // 성공 스타일 적용
                     }, 1000);
                 }
 
