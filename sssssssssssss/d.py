@@ -1,8 +1,7 @@
 from hangul_system import join_jamos, split_syllables
-import pandas as pd
-from openpyxl import Workbook
 import random
 import re,sys,os
+from typing import Set,List,Dict,Tuple
 
 
 current_dir = os.path.dirname(__file__)
@@ -15,8 +14,8 @@ with open(id_fi,'r',encoding='utf-8') as f:
 db_word=set(db_word)
 chin = 0
 po = 0
-file_path = os.path.join(current_dir, '.\\result_words3.txt')#'/content/result_words3.txt'
-file_path2 =os.path.join(current_dir, '.\\sdasd.txt') #'/content/sdasd.txt'
+start_letter_file = os.path.join(current_dir, '.\\result_words3.txt')#'/content/result_words3.txt'
+com_word_file =os.path.join(current_dir, '.\\sdasd.txt') #'/content/sdasd.txt'
 ch_list1 = ['ㅏ','ㅐ','ㅗ','ㅚ','ㅜ','ㅡ'] #두음 1
 ch_list2 = ['ㅑ','ㅕ','ㅖ','ㅛ','ㅠ','ㅣ'] #두음 2
 ch_list3 = ['ㅕ','ㅛ','ㅠ','ㅣ'] #두음 3
@@ -24,193 +23,171 @@ use_word_list = []
 player_win = 0
 compter_win = 0
 
-def change_rieul_to_nieun(word):
-    try:
-      if ")" in word:
-        #print('cut')
-        return '한방'
-      else:
-        jamos = extract_last_character(word) #끝글자 분리
-        jamos = split_syllables(jamos)  # 단어를 자모 단위로 분리
-        jamos_list = list(jamos)  # 자모 단위로 분리된 것을 리스트로 변환
-        if jamos_list[1] in ch_list1 and jamos_list[0] == 'ㄹ':
-          jamos_list[0] = 'ㄴ'
-        elif (jamos_list[1] in ch_list2 and jamos_list[0] == 'ㄹ') or (jamos_list[1] in ch_list3 and jamos_list[0] == 'ㄴ'):
-          jamos_list[0] = 'ㅇ'
-        modified_word_sub = join_jamos(jamos_list)
+class Game:
+    def __init__(self,word_db:Set[str]) -> None:
+        self.ch_list1 = ['ㅏ','ㅐ','ㅗ','ㅚ','ㅜ','ㅡ'] #두음 1
+        self.ch_list2 = ['ㅑ','ㅕ','ㅖ','ㅛ','ㅠ','ㅣ'] #두음 2
+        self.ch_list3 = ['ㅕ','ㅛ','ㅠ','ㅣ'] #두음 3
+        self.DB=word_db
+        with open(start_letter_file,'r',encoding='utf-8') as f:
+          self.start_letters = f.write().split()
+        self.set_start_letters=set(self.start_letters)
+        with open(com_word_file,'r',encoding='utf-8') as f:
+          self.com_word_db = f.write().split()
+        self.used_words=set()
+    
+    def duem(self,letter:str) -> str:
+      """
+      두음법칙 함수 입니다.
+
+      Arguments:
+        letter: 두음 법칙될 글자 
+
+      Return:
+        str: 두음 법칙된 글자
+      """
+      try:
+        jamos:str = split_syllables(letter)
+        jamos_list:List[str]=list(jamos)
+        if jamos_list[1] in self.ch_list1 and jamos_list[0]=='ㄹ':
+          jamos_list[0]='ㄴ'
+        elif (jamos_list[1] in self.ch_list2 and jamos_list[0]=='ㄹ') or (jamos_list[1] in self.ch_list3 and jamos_list[0]=='ㄴ') :
+          jamos_list[0]='ㅇ'
+        modified_word_sub:str = join_jamos(jamos_list)
         return modified_word_sub
-    		#modified_word_sub = join_jamos(jamos_list)  # 변경된 자모들을 다시 합쳐 단어로 변환
+        
+      except:
+        return None
+      
+    def extract_last_character(self,text:str) -> str:
+      """
+      끝글자 추출하는 함수
 
-    except IndexError:
-       return None
+      Arguments:
+        text: 추출할 글자
+      
+      Return:
+        str:추출된 글자
+      """
+      if text:
+        last_character:str=text[-1]
+        return last_character
+      else:
+        return None
+    
+    def extract_first_character(self,text:str)->str:
+      """
+      앞글자 추출하는 함수
 
-    		#return modified_word_sub
+      Arguments:
+        text: 추출할 글자
 
-def extract_last_character(text):
-  if text:  # 입력된 텍스트가 비어있지 않은 경우
-      last_character = text[-1]# 마지막 글자 추출
-      return last_character
-  else:
-      return "입력된 텍스트가 없습니다."
+      Return :
+        str 추출된 글자
+      """
+      if text:
+        return text[0]
+      else:
+        return None
 
-def check_word_in_DB(word):
-    try:
-        if word in db_word:    # 'id' 컬럼에 단어가 있는지 확인
-            return True
+    def check_word_in_db(self,word:str) -> str:
+      """
+      단어가 사전에 있는 단어인지 검사하는 함수
+
+      Arguments:
+        word: 검사할 단어
+
+      Return:
+        사전에 있는가?
+        True : 3y
+        False : 3x
+      """
+      try:
+          if word in self.DB:
+            return '3y'
+          else:
+            return '3x'
+      except:
+        return None
+            
+    def start_word_rand(self)->str:
+      """
+      시작 단어 추출함수
+
+      Return :
+        str : 시작 글자
+      """
+      pattern = re.compile("[^ㄱ-ㅎㅏ-ㅣ가-힣]+")
+      valid_words:List[str] = [word for word in self.start_letters if not pattern.search(word)]
+      if valid_words:
+        return random.choice(valid_words)
+      else:
+        return None
+
+    def word_used(self,word:str)->str:
+      """
+      해당 단어가 사용된적 있는지 검사하는 함수
+
+      Arguments:
+        word: 검사할 단어
+
+      Return :
+        사용된적 있나?
+        True : 4x
+        False : 4y
+      """
+      if word in self.used_words:
+        return '4x'
+      else:
+        return '4y'
+
+    def check_word_len(self,word:str)->str:
+      """
+      한글자인지 확인 하는 함수
+
+      Arguments:
+        word: 검사할 단어
+
+      Return :
+        1글자 인가?
+        True: 5x
+        False : 5y
+      """
+      if len(word)>1:
+        return '5y'
+      else:
+        return '5x'
+
+    def com_select_word(self,last_character:str, sub_last_character:str,chin:int)->Tuple[str]:
+      """
+      컴퓨터가 단어를 선택하는 함수
+
+      Arguments:
+        last_character: 이어야 하는 글자
+        sub_last_character: 이어야 하는 글자 (두음법칙 된거)
+        chin: 현제 체인
+
+      Retrun:
+        튜플 ('컴퓨터가 사용할 단어','게임 상태'):
+          컴퓨터가 이을 단어가 없다: ('','user_win')
+          컴퓨터가 한방 단어를 사용해 승리하였다: ('단어','com_win')
+          컴퓨터가 일반 단어를 사용하였다: ('단어','ing')
+      """
+      sel_words=[word for word in self.com_word_db if word[0] in (last_character,sub_last_character) and word not in self.used_words]
+      if not sel_words:
+        return ('','user_win')
+      if chin>3:
+        onecut=[word for word in sel_words if word[-1] not in self.set_start_letters]
+        if onecut:
+          return (random.choice(onecut),'com_win')
         else:
-            #print('사전에 없는 단어 입니다.')
-            return False
-    except Exception as e:
-        #print(f"에러 발생: {e}")
-        return False  # 예외 발생 시 False
-
-def extract_first_character(text):
-    if text:  # 입력된 텍스트가 비어있지 않은 경우
-        first_character = text[0]  # 첫번째 글자 추출
-        return first_character
-    else:
-        return "입력된 텍스트가 없습니다."
-
-def start_word_rand(file_path):
-    try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            words = file.read().split()
-
-            # 자음과 모음 패턴 정의 (한글 기준)
-            pattern = re.compile("[^ㄱ-ㅎㅏ-ㅣ가-힣]+")
-
-            # 자음과 모음을 제외한 단어들을 추출하여 리스트에 저장
-            valid_words = [word for word in words if not pattern.search(word)]
-
-            # 랜덤으로 단어 선택
-            if valid_words:
-                selected_word = random.choice(valid_words)
-                return selected_word
-            else:
-                return "해당 파일에는 자음과 모음을 제외한 단어가 없습니다."
-
-    except FileNotFoundError:
-        return "파일을 찾을 수 없습니다."
-    except Exception as e:
-        return f"에러 발생: {e}"
-
-def select_word(file_path, last_character, sub_last_character,chin):
-
-    try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            words = file.read().split()
-
-            # 선택된 단어들을 저장할 리스트
-            selected_words = []
-            onecut_words = []
-            select_wordss = []
-            all_onecut_words = []
-            ect_words = []
-            for word in words:
-                if '(' in word :
-                  all_onecut_words.append(word)
-                else :
-                   ect_words.append(word)
-            #print(all_onecut_words)
-            
-            for word in all_onecut_words:
-                if word.startswith(last_character) or word.startswith(sub_last_character):
-                    onecut_words.append(word)
-            for word in ect_words:
-                if word.startswith(last_character) or word.startswith(sub_last_character):
-                    select_wordss.append(word)
-            #print(onecut_words)
-            #print(select_wordss)
-            #for word in words:
-                # last_character 또는 sub_last_character로 시작하는 단어일 때
-                #if word.startswith(last_character) or word.startswith(sub_last_character):
-                    #select_wordss.append(word)
-                    #if '한방' in word:
-                      #if chin > 3:
-                        #onecut_words.append(word)
-
-                    #else:
-                        # '한방'이 붙어있지 않은 경우 선
-                        #selected_words.append(word)
-            #print(select_wordss)
-            #for word in select_wordss:
-                #if ')' in word:
-                  #onecut_words.append(word)
-                #else :
-                  #selected_words.append(word)
-            #print(onecut_words)
-            #print(selected_words)
-            if not select_wordss:
-                #print('s')
-                return None
-
-            
-            if chin > 3 :
-                if not onecut_words:
-                    jjj = random.choice(select_wordss)
-                    return jjj
-                else :
-                    jjj = random.choice(onecut_words)
-                    return jjj
-            else :
-                jjj = random.choice(select_wordss)
-                return jjj
-               
-            
-
-            # 랜덤으로 선택된 단어 반환
-            #if not onecut_words :
-              #return random.choice(selected_words)
-            #else :
-              #return random.choice(onecut_words)
+          return (random.choice(sel_words),'ing')
+      else:
+        return (random.choice(sel_words),'ing')
 
 
 
-    except FileNotFoundError:
-        return "파일을 찾을 수 없습니다."
-    except Exception as e:
-        return f"에러 발생: {e}"
-
-def add_unique_word(word, word_list):
-    if word in word_list:  # 입력한 단어가 이미 리스트에 있다면
-        return '중복'
-    else:  # 입력한 단어가 리스트에 없다면
-        #word_list.append(word)
-        return "suc"
-
-def check_length(word):
-    if len(word) == 1:  # 입력한 단어의 길이가 1이면
-        return "one"
-    else:  # 입력한 단어의 길이가 1보다 크면
-        return "ok"
-
-def print_last_sub(last_character,sub_last_character):
-  if last_character == sub_last_character:
-    print(f'>{last_character}')
-    return True
-  elif last_character == ')':
-    print('(한방) 컴퓨터 win!')
-    return 'OVER'
-  elif last_character != sub_last_character :
-    print(f'>{last_character}({sub_last_character})')
-    return False
-  elif last_character == '한방':
-    print('(한방)')
-    return 'OVER'
-
-def extract_words_starting_with(letter):
-    try:
-        #df = pd.read_excel('Ndb.xlsx')  # 엑셀 파일 불러오기
-        words=[word for word in db_word if word[0]==letter]
-        #words = df[df['id'].str.startswith(letter)]['id'].tolist()
-
-        return words  # 시작하는 단어들을 담은 리스트 반환
-
-    except FileNotFoundError:
-        return "파일을 찾을 수 없습니다."
-    except Exception as e:
-        return []
-
+"""
 
 def possibility_word_check(word,word_list,chin,last_character):
   alphabet_list = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z','a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
@@ -272,10 +249,10 @@ def possibility_word_check(word,word_list,chin,last_character):
     return False
 
 
-
+"""
 #main function
 ####
-while True :
+"""while True :
     chin = 0
     use_word_list = []
     po = 0
@@ -358,4 +335,4 @@ while True :
             if wait == 'st' or wait == '시작' : break
             elif wait == 'off' : break
             else: pass
-    if wait == 'off' : break
+    if wait == 'off' : break"""
