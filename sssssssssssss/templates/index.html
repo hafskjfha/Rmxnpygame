@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stack Visualization</title>
+    <title>끝말잇기 게임</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-    <h1>Stack Visualization</h1>
+    <h1>컴퓨터와 대결하는 끝말잇기</h1>
     <div id="input-box">
         <form id="inputForm">
-            <input type="text" id="userInput" placeholder="글자를 입력하세요">
-            <button id="submitButton" type="button">완료</button>
+            <input type="text" id="userInput" placeholder="글자를 입력하세요" disabled>
+            <button id="submitButton" type="button" disabled>완료</button>
         </form>
     </div>
 
@@ -19,6 +19,10 @@
     <div id="displayArea"></div>
 
     <div id="stackContainer" class="stack-container"></div>
+
+    <div id="startContainer" class="start-container">
+        <button id="startButton" type="button">게임 시작</button>
+    </div>
 
     <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>

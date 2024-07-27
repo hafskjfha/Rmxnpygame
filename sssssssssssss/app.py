@@ -22,7 +22,7 @@ def submit():
         new_element = data.get('inputBox')
         if new_element:
             # 스택에 원소 추가, 최대 5개로 제한
-            if len(stack) >= 5:
+            if len(stack) >= 4:
                 stack.pop(0)
             stack.append(new_element)
             return jsonify({'success': True, 'stack': stack,"letter":f"{new_element[-1]}"})
@@ -37,10 +37,21 @@ def check():
     if request.is_json:
         data = request.get_json()
         valu = data.get('inputBox')
-        if valu=='하이':
+        if valu in ('하이','쿵쾅'):
             return jsonify({"success": True})
         else:
-            return jsonify({"success": False})
+            return jsonify({"success": False,"reason":'어쩔 ㅋ'})
+
+@app.route('/api/com',methods=['POST',"GET"])
+def com_sel_word():
+    if 1==1:
+        return jsonify({'word':'computer lose!','game':'userwin'})
+        #return jsonify({'word':'이리듐','game':'comwin'})
+    return jsonify({'word':'이러쿵저러쿵','game':'ing'})
+
+@app.route('/api/st',methods=['GET','POST'])
+def start_letter_ch():
+    return jsonify({'letter':'하'})
 
 if __name__ == '__main__':
     app.run(debug=True)

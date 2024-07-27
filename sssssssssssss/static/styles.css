@@ -37,6 +37,16 @@
     text-decoration: line-through; /* 취소선 추가 */
 }
 
+/* 컴퓨터 승리 글자 색 */
+.user_lose{
+    color: red;
+}
+
+/* 사용자 승리 글자 색 */
+.user_win{
+    color: green;
+}
+
 /* 글자 표시 영역 */
 .displayArea {
     position: fixed; /* 페이지 스크롤에 영향을 받지 않도록 고정 */
