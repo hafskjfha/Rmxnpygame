@@ -1,10 +1,10 @@
 from flask import Flask, render_template, request, jsonify
+from d import Game
 
 app = Flask(__name__)
-
+game = Game()
 # 스택을 전역 변수로 정의
 stack = []
-
 @app.route('/', methods=['GET','POST'])
 def home():
     global stack

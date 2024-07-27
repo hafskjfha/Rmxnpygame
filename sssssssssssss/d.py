@@ -1,40 +1,31 @@
 from hangul_system import join_jamos, split_syllables
-import random
-import re,sys,os
+import re,sys,os,random
 from typing import Set,List,Dict,Tuple
 
-
 current_dir = os.path.dirname(__file__)
-id_fi=os.path.join(current_dir, '.\\id_list (1).txt')
+id_file=os.path.join(current_dir, '.\\id_list (1).txt')
 print('starting...')
 print('reading DB....')
-#df = pd.read_excel('C:/Users/win/Downloads/sssssssssssss/Ndb.xlsx') #db엑셀 읽기
-with open(id_fi,'r',encoding='utf-8') as f:
-  db_word=f.read().split()
-db_word=set(db_word)
-chin = 0
 po = 0
-start_letter_file = os.path.join(current_dir, '.\\result_words3.txt')#'/content/result_words3.txt'
-com_word_file =os.path.join(current_dir, '.\\sdasd.txt') #'/content/sdasd.txt'
-ch_list1 = ['ㅏ','ㅐ','ㅗ','ㅚ','ㅜ','ㅡ'] #두음 1
-ch_list2 = ['ㅑ','ㅕ','ㅖ','ㅛ','ㅠ','ㅣ'] #두음 2
-ch_list3 = ['ㅕ','ㅛ','ㅠ','ㅣ'] #두음 3
-use_word_list = []
+start_letter_file = os.path.join(current_dir, '.\\result_words3.txt')#'시작 단어 모음'
+com_word_file =os.path.join(current_dir, '.\\sdasd.txt') #'컴퓨터 단어 db'
 player_win = 0
 compter_win = 0
 
 class Game:
-    def __init__(self,word_db:Set[str]) -> None:
+    def __init__(self) -> None:
         self.ch_list1 = ['ㅏ','ㅐ','ㅗ','ㅚ','ㅜ','ㅡ'] #두음 1
         self.ch_list2 = ['ㅑ','ㅕ','ㅖ','ㅛ','ㅠ','ㅣ'] #두음 2
         self.ch_list3 = ['ㅕ','ㅛ','ㅠ','ㅣ'] #두음 3
-        self.DB=word_db
+        with open(id_file,'r',encoding='utf-8') as f:
+          self.DB=set(f.read().split())
         with open(start_letter_file,'r',encoding='utf-8') as f:
           self.start_letters = f.write().split()
         self.set_start_letters=set(self.start_letters)
         with open(com_word_file,'r',encoding='utf-8') as f:
           self.com_word_db = f.write().split()
         self.used_words=set()
+        self.chin=0
     
     def duem(self,letter:str) -> str:
       """
@@ -158,14 +149,13 @@ class Game:
       else:
         return '5x'
 
-    def com_select_word(self,last_character:str, sub_last_character:str,chin:int)->Tuple[str]:
+    def com_select_word(self,last_character:str, sub_last_character:str)->Tuple[str]:
       """
       컴퓨터가 단어를 선택하는 함수
 
       Arguments:
         last_character: 이어야 하는 글자
         sub_last_character: 이어야 하는 글자 (두음법칙 된거)
-        chin: 현제 체인
 
       Retrun:
         튜플 ('컴퓨터가 사용할 단어','게임 상태'):
@@ -176,7 +166,7 @@ class Game:
       sel_words=[word for word in self.com_word_db if word[0] in (last_character,sub_last_character) and word not in self.used_words]
       if not sel_words:
         return ('','user_win')
-      if chin>3:
+      if self.chin>3:
         onecut=[word for word in sel_words if word[-1] not in self.set_start_letters]
         if onecut:
           return (random.choice(onecut),'com_win')
