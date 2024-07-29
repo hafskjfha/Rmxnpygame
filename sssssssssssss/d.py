@@ -171,9 +171,36 @@ class Game:
         if onecut:
           return (random.choice(onecut),'com_win')
         else:
-          return (random.choice(sel_words),'ing')
+          self.chin+=1
+          k=random.choice(sel_words)
+          self.used_words.add(k)
+          return (k,'ing')
       else:
-        return (random.choice(sel_words),'ing')
+        self.chin+=1
+        k=random.choice(sel_words)
+        self.used_words.add(k)
+        return (k,'ing')
+      
+    def check_start_kill(self,word:str)->str:
+      """
+      시작 한방 인지 확인하는 함수
+
+      Arguments:
+        word : 시작한방인지 검사할 단어
+
+      Return:
+        str(bool)
+        시작한방 아님: 6y
+        시작한방 맞음: 6x
+      """
+      if self.chin>2:
+        return '6y'
+      else:
+        sub=self.duem(word[-1])
+        for dbw in self.DB:
+          if dbw[0] in (word[0],sub):
+            return '6y'
+        return '6x'
 
 
 

@@ -121,6 +121,19 @@ document.addEventListener('DOMContentLoaded', function() {
                                                         })
                                                         .catch(error => console.error('Error:', error));
                                                     } else if (comData.game === 'comwin') {
+                                                        fetch('/submit', {
+                                                            method: 'POST',
+                                                            headers: {
+                                                                'Content-Type': 'application/json',
+                                                            },
+                                                            body: JSON.stringify({ inputBox: comData.word }),
+                                                        })
+                                                        .then(response => response.json())
+                                                        .then(updateData => {
+                                                            if (updateData.success) {
+                                                                lastLetter = updateData.letter;
+                                                                updateStack();
+                                                            }})
                                                         displayArea.textContent = `컴퓨터 승리!`;
                                                         displayArea.className = 'displayArea user_lose';
                                                     } else if (comData.game === 'userwin') {
