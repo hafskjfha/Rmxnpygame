@@ -10,8 +10,9 @@ letterK=''
 sub_letterK=''
 @app.route('/', methods=['GET','POST'])
 def home():
-    global stack
+    global stack,game
     stack = deque()
+    game.chin=0
     return render_template('index.html')
 
 @app.route('/stack', methods=['GET'])
@@ -33,13 +34,11 @@ def submit():
                 letterK=new_element[-1]
                 game.used_words.add(new_element)
                 sub_letterK=k
-                game.chin+=1
                 return jsonify({'success': True, 'stack': list(stack),"letter":f"{new_element[-1]}({k})",'chin':game.chin})
             else:
                 letterK=new_element[-1]
                 game.used_words.add(new_element)
                 sub_letterK=letterK
-                game.chin+=1
                 return jsonify({'success': True, 'stack': list(stack),"letter":f"{new_element[-1]}",'chin':game.chin})
         else:
             return jsonify({'error': 'No input provided'}), 400
@@ -53,7 +52,6 @@ def check():
     if request.is_json:
         data = request.get_json()
         valu:str = data.get('inputBox')
-        print(valu[0],(letterK,sub_letterK))
         if valu[0] not in (letterK,sub_letterK):
             return jsonify({"success": False,"reason":''})
         k=game.check_word_len(valu)
@@ -68,6 +66,7 @@ def check():
         k=game.check_start_kill(valu)
         if k=='6x':
             return jsonify({"success": False,"reason":'시작 한방 금지'})
+        game.chin+=1
         return jsonify({"success": True})
 
 
@@ -80,13 +79,14 @@ def com_sel_word():
         return jsonify({'word':'computer lose!','game':'userwin'})
     elif statez=='com_win':
         return jsonify({'word':f'{com_word}','game':'comwin'})
-    return jsonify({'word':f'{com_word}','game':'ing'})
+    return jsonify({'word':f'{com_word}','game':'ing','chin':game.chin})
 
 @app.route('/api/st',methods=['GET','POST'])
 def start_letter_ch():
-    global letterK,sub_letterK
+    global letterK,sub_letterK,stack
     game.chin=0
     game.used_words=set()
+    stack=deque()
     letterz=game.start_word_rand()
     sub_letterz=game.duem(letterz)
     if letterz==sub_letterz:

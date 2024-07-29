@@ -5,8 +5,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputForm = document.getElementById('inputForm');
     const submitButton = document.getElementById('submitButton');
     const startButton = document.getElementById('startButton');
+    const userWinCount = document.getElementById('userWinCount');
+    const comWinCount = document.getElementById('comWinCount');
+    const userWinRate = document.getElementById('userWinRate');
+    const comWinRate = document.getElementById('comWinRate');
+    const chinDisplay = document.getElementById('chinDisplay');
+
     let lastLetter = '';  // 마지막으로 표시된 letter를 저장하는 변수
     let myTurn = true;  // 초기 상태는 true
+    let userWins = 0;   // 사용자 승리 횟수
+    let comWins = 0;    // 컴퓨터 승리 횟수
+    let totalGames = 0; // 총 게임 횟수
+    let chinCount = 0;  // chin 값
 
     function updateStack() {
         fetch('/stack')
@@ -40,6 +50,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function updateWinRates() {
+        totalGames = userWins + comWins;
+        if (totalGames > 0) {
+            const userRate = ((userWins / totalGames) * 100).toFixed(2);
+            const comRate = ((comWins / totalGames) * 100).toFixed(2);
+            userWinRate.textContent = `사용자 승률: ${userRate}%`;
+            comWinRate.textContent = `컴퓨터 승률: ${comRate}%`;
+        }
+    }
+
+    function updateChin() {
+        chinCount++;
+        chinDisplay.textContent = chinCount;
+        chinDisplay.className = 'chin success';
+    }
+
     function handleSubmit(event) {
         event.preventDefault();
         const input_value = inputBox.value.trim();
@@ -63,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // myTurn을 false로 설정
                     myTurn = false;
                     updateInputVisibility();
+                    updateChin(); // 체인 증가
 
                     setTimeout(() => {
                         displayArea.textContent = ''; // 글자 사라지게 설정
@@ -92,6 +119,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                         .then(comData => {
                                             if (comData.word) {
                                                 displayArea.textContent = comData.word; // 단어 표시
+                                                updateChin(); // 체인 증가
+
                                                 setTimeout(() => {
                                                     displayArea.textContent = ''; // 2초 후 단어 지우기
 
@@ -136,9 +165,17 @@ document.addEventListener('DOMContentLoaded', function() {
                                                             }})
                                                         displayArea.textContent = `컴퓨터 승리!`;
                                                         displayArea.className = 'displayArea user_lose';
+                                                        comWins++;
+                                                        comWinCount.textContent = `컴퓨터 승리 횟수: ${comWins}`;
+                                                        updateWinRates();
+                                                        startButton.disabled = false; // 게임 시작 버튼 다시 활성화
                                                     } else if (comData.game === 'userwin') {
                                                         displayArea.textContent = '사용자 승리!';
                                                         displayArea.className = 'displayArea user_win';
+                                                        userWins++;
+                                                        userWinCount.textContent = `사용자 승리 횟수: ${userWins}`;
+                                                        updateWinRates();
+                                                        startButton.disabled = false; // 게임 시작 버튼 다시 활성화
                                                     }
                                                 }, 2000); // 2초 후 단어 지우기
                                             } else {
@@ -157,6 +194,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     // 실패한 요청 처리
                     displayArea.textContent = `${data.reason}; ${input_value}`;
                     displayArea.className = 'displayArea failure'; // 실패 스타일 적용
+                    chinDisplay.textContent = ''; // chin 값 숨기기
+                    chinDisplay.className = '';
 
                     setTimeout(() => {
                         displayArea.textContent = ''; // 글자 사라지게 설정
@@ -192,6 +231,8 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(startData => {
                 if (startData.letter) {
                     // 시작 글자 표시
+                    chinCount = 0;
+                    updateStack();
                     displayArea.style.display = 'block';
                     displayArea.textContent = startData.letter;
                     displayArea.className = 'displayArea success';

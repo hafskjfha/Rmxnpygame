@@ -193,12 +193,12 @@ class Game:
         시작한방 아님: 6y
         시작한방 맞음: 6x
       """
-      if self.chin>2:
+      if self.chin>1:
         return '6y'
       else:
         sub=self.duem(word[-1])
         for dbw in self.DB:
-          if dbw[0] in (word[0],sub):
+          if dbw[0] in (word[-1],sub):
             return '6y'
         return '6x'
 

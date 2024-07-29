@@ -15,13 +15,22 @@
         </form>
     </div>
 
-    <!-- This is a one-line comment -->
-    <div id="displayArea"></div>
+    <div id="displayContainer">
+        <div id="displayArea"></div>
+        <div id="chinDisplay" class="chin"></div>
+    </div>
 
     <div id="stackContainer" class="stack-container"></div>
 
     <div id="startContainer" class="start-container">
         <button id="startButton" type="button">게임 시작</button>
+    </div>
+
+    <div id="winCounts">
+        <div id="userWinCount">사용자 승리 횟수: 0</div>
+        <div id="comWinCount">컴퓨터 승리 횟수: 0</div>
+        <div id="userWinRate">사용자 승률: 0%</div>
+        <div id="comWinRate">컴퓨터 승률: 0%</div>
     </div>
 
     <script src="{{ url_for('static', filename='main.js') }}"></script>
