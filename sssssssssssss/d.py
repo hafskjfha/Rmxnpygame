@@ -20,10 +20,10 @@ class Game:
         with open(id_file,'r',encoding='utf-8') as f:
           self.DB=set(f.read().split())
         with open(start_letter_file,'r',encoding='utf-8') as f:
-          self.start_letters = f.write().split()
+          self.start_letters = f.read().split()
         self.set_start_letters=set(self.start_letters)
         with open(com_word_file,'r',encoding='utf-8') as f:
-          self.com_word_db = f.write().split()
+          self.com_word_db = f.read().split()
         self.used_words=set()
         self.chin=0
     

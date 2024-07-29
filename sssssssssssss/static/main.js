@@ -85,53 +85,55 @@ document.addEventListener('DOMContentLoaded', function() {
                                 displayArea.textContent = lastLetter;
                                 displayArea.className = 'displayArea success'; // 성공 스타일 적용
 
-                                // /api/com에서 단어 받아오기
-                                fetch('/api/com')
-                                    .then(response => response.json())
-                                    .then(comData => {
-                                        if (comData.word) {
-                                            displayArea.textContent = comData.word; // 단어 표시
-                                            setTimeout(() => {
-                                                displayArea.textContent = ''; // 2초 후 단어 지우기
+                                // /api/com에서 단어 받아오기 (0.5초 후에 요청 보내기)
+                                setTimeout(() => {
+                                    fetch('/api/com')
+                                        .then(response => response.json())
+                                        .then(comData => {
+                                            if (comData.word) {
+                                                displayArea.textContent = comData.word; // 단어 표시
+                                                setTimeout(() => {
+                                                    displayArea.textContent = ''; // 2초 후 단어 지우기
 
-                                                if (comData.game === 'ing') {
-                                                    // myTurn을 true로 설정
-                                                    myTurn = true;
-                                                    updateInputVisibility();
+                                                    if (comData.game === 'ing') {
+                                                        // myTurn을 true로 설정
+                                                        myTurn = true;
+                                                        updateInputVisibility();
 
-                                                    // 스택 업데이트 요청
-                                                    fetch('/submit', {
-                                                        method: 'POST',
-                                                        headers: {
-                                                            'Content-Type': 'application/json',
-                                                        },
-                                                        body: JSON.stringify({ inputBox: comData.word }),
-                                                    })
-                                                    .then(response => response.json())
-                                                    .then(updateData => {
-                                                        if (updateData.success) {
-                                                            lastLetter = updateData.letter;
-                                                            updateStack();
-                                                            displayArea.textContent = lastLetter; // 마지막으로 표시된 letter 유지
-                                                            displayArea.className = 'displayArea success';
-                                                        } else {
-                                                            console.error('Error:', updateData.error);
-                                                        }
-                                                    })
-                                                    .catch(error => console.error('Error:', error));
-                                                } else if (comData.game === 'comwin') {
-                                                    displayArea.textContent = `컴퓨터 승리!`;
-                                                    displayArea.className = 'displayArea user_lose';
-                                                } else if (comData.game === 'userwin') {
-                                                    displayArea.textContent = '사용자 승리!';
-                                                    displayArea.className = 'displayArea user_win';
-                                                }
-                                            }, 2000); // 2초 후 단어 지우기
-                                        } else {
-                                            console.error('Error:', comData.error);
-                                        }
-                                    })
-                                    .catch(error => console.error('Error:', error));
+                                                        // 스택 업데이트 요청
+                                                        fetch('/submit', {
+                                                            method: 'POST',
+                                                            headers: {
+                                                                'Content-Type': 'application/json',
+                                                            },
+                                                            body: JSON.stringify({ inputBox: comData.word }),
+                                                        })
+                                                        .then(response => response.json())
+                                                        .then(updateData => {
+                                                            if (updateData.success) {
+                                                                lastLetter = updateData.letter;
+                                                                updateStack();
+                                                                displayArea.textContent = lastLetter; // 마지막으로 표시된 letter 유지
+                                                                displayArea.className = 'displayArea success';
+                                                            } else {
+                                                                console.error('Error:', updateData.error);
+                                                            }
+                                                        })
+                                                        .catch(error => console.error('Error:', error));
+                                                    } else if (comData.game === 'comwin') {
+                                                        displayArea.textContent = `컴퓨터 승리!`;
+                                                        displayArea.className = 'displayArea user_lose';
+                                                    } else if (comData.game === 'userwin') {
+                                                        displayArea.textContent = '사용자 승리!';
+                                                        displayArea.className = 'displayArea user_win';
+                                                    }
+                                                }, 2000); // 2초 후 단어 지우기
+                                            } else {
+                                                console.error('Error:', comData.error);
+                                            }
+                                        })
+                                        .catch(error => console.error('Error:', error));
+                                }, 800); // 0.5초 대기 후 요청 보내기
                             } else {
                                 console.error('Error:', submitData.error);
                             }

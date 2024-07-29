@@ -2,6 +2,7 @@
 __pycache__/       # Python이 바이트코드로 컴파일한 파일들이 저장되는 디렉토리
 *.py[cod]          # .pyc, .pyo, .pyd 파일을 제외
 *$py.class         # Jython이 생성하는 클래스 파일
+*.pyc
 
 # C extensions
 *.so               # C로 작성된 확장 모듈 파일
@@ -108,3 +109,4 @@ dmypy.json         # mypy 데몬 JSON 파일
 
 # pytype static type analyzer
 .pytype/           # pytype 정적 타입 분석기 디렉토리
+sssssssssssss/__pycache__/d.cpython-311.pyc
