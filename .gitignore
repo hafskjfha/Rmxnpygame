@@ -1,0 +1,110 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/       # Python이 바이트코드로 컴파일한 파일들이 저장되는 디렉토리
+*.py[cod]          # .pyc, .pyo, .pyd 파일을 제외
+*$py.class         # Jython이 생성하는 클래스 파일
+
+# C extensions
+*.so               # C로 작성된 확장 모듈 파일
+
+# Distribution / packaging
+.Python            # 가상 환경 디렉토리
+build/             # 빌드된 패키지 디렉토리
+develop-eggs/      # 개발용 egg 파일 디렉토리
+dist/              # 배포 패키지 디렉토리
+downloads/         # 다운로드 디렉토리
+eggs/              # egg 파일 디렉토리
+.eggs/             # 숨겨진 egg 파일 디렉토리
+lib/               # 라이브러리 디렉토리
+lib64/             # 64비트 라이브러리 디렉토리
+parts/             # 분리된 빌드 파트 디렉토리
+sdist/             # 소스 배포 디렉토리
+var/               # 변수 파일 디렉토리
+wheels/            # wheel 배포 디렉토리
+*.egg-info/        # egg 정보 파일 디렉토리
+.installed.cfg     # 설치된 패키지 구성 파일
+*.egg              # egg 파일
+
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest         # PyInstaller가 생성하는 manifest 파일
+*.spec             # PyInstaller 스펙 파일
+
+# Installer logs
+pip-log.txt        # pip 설치 로그 파일
+pip-delete-this-directory.txt  # pip 디렉토리 삭제 로그 파일
+
+# Unit test / coverage reports
+htmlcov/           # HTML 커버리지 보고서 디렉토리
+.tox/              # tox 테스트 환경 디렉토리
+.nox/              # nox 테스트 환경 디렉토리
+.coverage          # 커버리지 보고서 파일
+.coverage.*        # 다양한 커버리지 파일
+.cache             # 캐시 파일
+nosetests.xml      # Nose 테스트 결과 파일
+coverage.xml       # 커버리지 XML 파일
+*.cover            # 커버리지 파일
+*.py,cover         # Python 커버리지 파일
+.hypothesis/       # Hypothesis 테스트 캐시 디렉토리
+.pytest_cache/     # pytest 캐시 디렉토리
+cover/             # 커버리지 디렉토리
+
+# Translations
+*.mo               # 번역 파일
+*.pot              # 번역 템플릿 파일
+
+# Django stuff:
+*.log              # 로그 파일
+local_settings.py  # 로컬 설정 파일
+db.sqlite3         # SQLite 데이터베이스 파일
+db.sqlite3-journal # SQLite 저널 파일
+
+# Flask stuff:
+instance/          # Flask 인스턴스 디렉토리
+.webassets-cache   # Flask 웹 에셋 캐시 디렉토리
+
+# Scrapy stuff:
+.scrapy            # Scrapy 캐시 디렉토리
+
+# Sphinx documentation
+docs/_build/       # Sphinx 빌드 디렉토리
+
+# PyBuilder
+target/            # PyBuilder 타겟 디렉토리
+
+# Jupyter Notebook
+.ipynb_checkpoints # Jupyter 노트북 체크포인트 파일
+
+# IPython
+profile_default/   # 기본 IPython 프로필 디렉토리
+ipython_config.py  # IPython 구성 파일
+
+# Environments
+.env               # 가상 환경 디렉토리
+.venv              # 가상 환경 디렉토리
+env/               # 가상 환경 디렉토리
+venv/              # 가상 환경 디렉토리
+ENV/               # 가상 환경 디렉토리
+env.bak/           # 백업된 가상 환경 디렉토리
+venv.bak/          # 백업된 가상 환경 디렉토리
+
+# Spyder project settings
+.spyderproject     # Spyder 프로젝트 설정 파일
+.spyproject        # Spyder 프로젝트 설정 파일
+
+# Rope project settings
+.ropeproject       # Rope 프로젝트 설정 파일
+
+# mkdocs documentation
+/site              # mkdocs 사이트 빌드 디렉토리
+
+# mypy
+.mypy_cache/       # mypy 캐시 디렉토리
+.dmypy.json        # mypy 데몬 JSON 파일
+dmypy.json         # mypy 데몬 JSON 파일
+
+# Pyre type checker
+.pyre/             # Pyre 타입 검사기 디렉토리
+
+# pytype static type analyzer
+.pytype/           # pytype 정적 타입 분석기 디렉토리
