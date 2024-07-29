@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateChin() {
         chinCount++;
-        chinDisplay.textContent = chinCount;
+        chinDisplay.textContent = chinCount-1;
         chinDisplay.className = 'chin success';
     }
 
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         .then(comData => {
                                             if (comData.word) {
                                                 displayArea.textContent = comData.word; // 단어 표시
-                                                updateChin(); // 체인 증가
+                                                
 
                                                 setTimeout(() => {
                                                     displayArea.textContent = ''; // 2초 후 단어 지우기
@@ -128,6 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                         // myTurn을 true로 설정
                                                         myTurn = true;
                                                         updateInputVisibility();
+                                                        updateChin(); // 체인 증가
 
                                                         // 스택 업데이트 요청
                                                         fetch('/submit', {
@@ -162,6 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                                             if (updateData.success) {
                                                                 lastLetter = updateData.letter;
                                                                 updateStack();
+                                                                updateChin(); // 체인 증가
                                                             }})
                                                         displayArea.textContent = `컴퓨터 승리!`;
                                                         displayArea.className = 'displayArea user_lose';
@@ -194,8 +196,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     // 실패한 요청 처리
                     displayArea.textContent = `${data.reason}; ${input_value}`;
                     displayArea.className = 'displayArea failure'; // 실패 스타일 적용
-                    chinDisplay.textContent = ''; // chin 값 숨기기
-                    chinDisplay.className = '';
 
                     setTimeout(() => {
                         displayArea.textContent = ''; // 글자 사라지게 설정
@@ -232,6 +232,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (startData.letter) {
                     // 시작 글자 표시
                     chinCount = 0;
+                    updateChin();
                     updateStack();
                     displayArea.style.display = 'block';
                     displayArea.textContent = startData.letter;
