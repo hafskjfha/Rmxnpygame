@@ -7,7 +7,8 @@ id_file=os.path.join(current_dir, '.\\id_list (1).txt')
 print('starting...')
 print('reading DB....')
 po = 0
-start_letter_file = os.path.join(current_dir, '.\\result_words3.txt')#'시작 단어 모음'
+start_letter_file = os.path.join(current_dir, '.\\start_letters.txt')#'시작 글자 모음'
+not_onecut_letter_file=os.path.join(current_dir, '.\\not_onecut_letter.txt')#한방 글자가 아닌 것 모음
 com_word_file =os.path.join(current_dir, '.\\sdasd.txt') #'컴퓨터 단어 db'
 player_win = 0
 compter_win = 0
@@ -24,6 +25,8 @@ class Game:
         self.set_start_letters=set(self.start_letters)
         with open(com_word_file,'r',encoding='utf-8') as f:
           self.com_word_db = f.read().split()
+        with open(not_onecut_letter_file,'r',encoding='utf-8') as f:
+          self.not_onecut=f.read().split()
         self.used_words=set()
         self.chin=0
     
@@ -48,7 +51,7 @@ class Game:
         return modified_word_sub
         
       except:
-        return None
+        return letter
       
     def extract_last_character(self,text:str) -> str:
       """
@@ -167,7 +170,7 @@ class Game:
       if not sel_words:
         return ('','user_win')
       if self.chin>3:
-        onecut=[word for word in sel_words if word[-1] not in self.set_start_letters]
+        onecut=[word for word in sel_words if word[-1] not in self.not_onecut]
         if onecut:
           return (random.choice(onecut),'com_win')
         else:
@@ -197,9 +200,8 @@ class Game:
         return '6y'
       else:
         sub=self.duem(word[-1])
-        for dbw in self.DB:
-          if dbw[0] in (word[-1],sub):
-            return '6y'
+        if word[-1] in self.not_onecut or sub in self.not_onecut:
+          return '6y'
         return '6x'
 
 
