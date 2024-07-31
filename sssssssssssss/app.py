@@ -1,6 +1,9 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_file
 from d import Game
 from collections import deque
+import os
+
+current_dir = os.path.dirname(__file__)
 
 app = Flask(__name__)
 game = Game()
@@ -87,7 +90,7 @@ def start_letter_ch():
     game.chin=0
     game.used_words=set()
     stack=deque()
-    letterz=game.start_word_rand()
+    letterz='니'#game.start_word_rand()
     sub_letterz=game.duem(letterz)
     if letterz==sub_letterz:
         letterK=letterz
@@ -98,7 +101,11 @@ def start_letter_ch():
         sub_letterK=sub_letterz
         return jsonify({'letter':f'{letterz}({sub_letterz})'})
 
-
+@app.route('/img/blue.png')
+def get_image():
+    # 이미지 파일 경로
+    image_path = os.path.join(current_dir, '.\\img\\blue.png')
+    return send_file(image_path, mimetype='image/png')
 
 if __name__ == '__main__':
     app.run(debug=True)

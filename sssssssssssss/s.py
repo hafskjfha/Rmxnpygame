@@ -77,11 +77,13 @@ sb=[]
 #   m=revers_duem(k)
 #   yy=[]
 #   n=[h for h in p if h[0] in m]
-#   if len(n)>2:
+#   if n:
 #     sb.extend(m)
+# sb=list(set(sb))
 # with open('start_letters.txt','w',encoding='utf-8') as wf:
 #   wf.write('\n'.join(sb))
-bb=os.path.join(current_dir, '.\\not_onecut_letter.txt')
-with open(bb,'w',encoding='utf-8')as wf:
-  jj.sort()
-  wf.write('\n'.join(jj))
+# bb=os.path.join(current_dir, '.\\not_onecut_letter.txt')
+# with open(bb,'w',encoding='utf-8')as wf:
+#   sb.sort()
+#   wf.write('\n'.join(sb))
+#print(revers_duem('잇'))

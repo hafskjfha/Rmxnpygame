@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let totalGames = 0; // 총 게임 횟수
     let chinCount = 0;  // chin 값
 
+    chinDisplay.textContent = chinCount;
+
     function updateStack() {
         fetch('/stack')
             .then(response => response.json())
@@ -30,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     box.className = i < stack.length ? 'box' : 'empty-box'; // 스택 원소가 있는지 여부에 따라 클래스 설정
 
                     if (i < stack.length) {
-                        box.textContent = stack[i]; // 원소가 있는 경우 내용 추가
+                        box.textContent = stack[i].length > 10 ? stack[i].slice(0, 10) + '...' : stack[i]; // 내용 추가
                     }
 
                     stackContainer.appendChild(box);
@@ -45,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
             submitButton.disabled = false;
             inputBox.focus();  // 인풋창에 포커스 설정
         } else {
-            inputBox.disabled = true;
+            inputBox.disabled = false;
             submitButton.disabled = true;
         }
     }
@@ -70,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
         event.preventDefault();
         const input_value = inputBox.value.trim();
 
-        if (input_value) {
+        if (input_value && myTurn) {
             fetch('/api/su', {
                 method: 'POST',
                 headers: {
@@ -214,13 +216,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Add event listener for the submit button
-    submitButton.addEventListener("click", handleSubmit);
+    submitButton.addEventListener("click", function(event) {
+        if (myTurn) {
+            handleSubmit(event);
+        }
+    });
 
     // Add event listener for the input field to detect "Enter" key press
     inputBox.addEventListener("keypress", function(event) {
         if (event.key === "Enter") {
             event.preventDefault();  // Prevent form submission if the input is inside a form
-            handleSubmit(event);
+            if (myTurn) {
+                handleSubmit(event);
+            }
         }
     });
 

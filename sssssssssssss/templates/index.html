@@ -8,16 +8,21 @@
 </head>
 <body>
     <h1>컴퓨터와 대결하는 끝말잇기</h1>
+
+    <div id="displayContainer">
+        <div id="displayArea"></div>
+        <div id="chinContainer" class="chin-container">
+            <div class="chin-text">chin</div>
+            <div id="chinDisplay" class="chin-number">0</div>
+        </div>
+    </div>
+    
+
     <div id="input-box">
         <form id="inputForm">
             <input type="text" id="userInput" placeholder="글자를 입력하세요" disabled>
             <button id="submitButton" type="button" disabled>완료</button>
         </form>
-    </div>
-
-    <div id="displayContainer">
-        <div id="displayArea"></div>
-        <div id="chinDisplay" class="chin"></div>
     </div>
 
     <div id="stackContainer" class="stack-container"></div>
